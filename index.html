@@ -1,0 +1,2063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalAgent Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080a0e;
+    --bg2: #0d1018;
+    --bg3: #111520;
+    --surface: #161b28;
+    --surface2: #1c2233;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaf0;
+    --text2: #8b92a8;
+    --text3: #52596e;
+    --accent: #4fffb0;
+    --accent2: #00d4ff;
+    --accent3: #a78bfa;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --glow: rgba(79,255,176,0.15);
+    --glow2: rgba(0,212,255,0.1);
+    --mono: 'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    font-optical-sizing: none;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── GRID BG ── */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,255,176,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,255,176,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,10,14,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text2);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: rgba(79,255,176,0.08);
+    border: 1px solid rgba(79,255,176,0.2);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 80px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px; left: -200px;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(79,255,176,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s forwards;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    max-width: 800px;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title .accent { color: var(--accent); }
+  .hero-title .accent2 { color: var(--accent2); }
+
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text2);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-metrics {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .metric-value {
+    font-family: var(--display);
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .metric-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    text-transform: uppercase;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s 1s forwards;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── STATEMENT ── */
+  .statement {
+    padding: 120px 80px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .statement-inner {
+    max-width: 900px;
+  }
+
+  .statement-quote {
+    font-family: var(--display);
+    font-size: clamp(24px, 3.5vw, 40px);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+
+  .statement-quote .hl { color: var(--accent); }
+  .statement-quote .hl2 { color: var(--accent2); }
+
+  .statement-body {
+    font-size: 17px;
+    color: var(--text2);
+    line-height: 1.8;
+    max-width: 680px;
+    font-weight: 300;
+  }
+
+  /* ── PILLARS ── */
+  .pillars {
+    padding: 120px 80px;
+  }
+
+  .section-header {
+    margin-bottom: 64px;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-tag::before {
+    content: '//';
+    color: var(--text3);
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .pillar {
+    background: var(--surface);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .pillar:hover { background: var(--surface2); }
+  .pillar:hover::before { transform: scaleX(1); }
+
+  .pillar-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    margin-bottom: 20px;
+  }
+
+  .pillar-icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .pillar-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .pillar-title {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .pillar-body {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .pillar-tag {
+    display: inline-flex;
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: rgba(79,255,176,0.06);
+    border: 1px solid rgba(79,255,176,0.15);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  /* ── CUSTODY DIAL ── */
+  .custody {
+    padding: 120px 80px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .custody-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .custody-visual {
+    position: relative;
+  }
+
+  .custody-spectrum {
+    position: relative;
+    padding: 8px 0;
+  }
+
+  .spectrum-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    position: relative;
+    margin: 40px 0;
+  }
+
+  .spectrum-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .spectrum-nodes {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .spec-node {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--border2);
+    transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+    position: relative;
+  }
+
+  .spec-node.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(79,255,176,0.6);
+  }
+
+  .spec-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+
+  .spec-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    text-align: center;
+    width: 80px;
+    margin-left: -34px;
+  }
+
+  .spec-label:first-child { margin-left: 0; text-align: left; }
+  .spec-label:last-child { margin-left: 0; text-align: right; }
+
+  .custody-modes {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 32px;
+  }
+
+  .custody-mode {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--surface);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .custody-mode:hover { border-color: var(--border2); background: var(--surface2); }
+
+  .custody-mode.active {
+    border-color: rgba(79,255,176,0.3);
+    background: rgba(79,255,176,0.04);
+  }
+
+  .mode-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--text3);
+    flex-shrink: 0;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+
+  .custody-mode.active .mode-dot {
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(79,255,176,0.5);
+  }
+
+  .mode-label {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text2);
+    flex: 1;
+    transition: color 0.2s;
+  }
+
+  .custody-mode.active .mode-label { color: var(--text); }
+
+  .mode-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .badge-gray { background: rgba(255,255,255,0.05); color: var(--text3); }
+  .badge-blue { background: rgba(0,212,255,0.08); color: var(--accent2); border: 1px solid rgba(0,212,255,0.2); }
+  .badge-green { background: rgba(79,255,176,0.08); color: var(--accent); border: 1px solid rgba(79,255,176,0.2); }
+
+  .custody-detail {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .detail-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .detail-heading {
+    font-family: var(--display);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .detail-body {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+
+  .detail-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .fact {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .fact-check {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent);
+  }
+
+  /* ── ARCHITECTURE ── */
+  .architecture {
+    padding: 120px 80px;
+  }
+
+  .arch-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .arch-diagram {
+    position: relative;
+  }
+
+  .arch-layer {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .arch-layer:hover { border-color: var(--border2); }
+  .arch-layer.expanded { border-color: rgba(79,255,176,0.3); }
+
+  .arch-layer-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--surface);
+    transition: background 0.2s;
+    user-select: none;
+  }
+
+  .arch-layer:hover .arch-layer-header { background: var(--surface2); }
+  .arch-layer.expanded .arch-layer-header { background: rgba(79,255,176,0.04); }
+
+  .arch-layer-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .arch-layer-name {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .arch-layer-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  .arch-layer-arrow {
+    width: 16px;
+    height: 16px;
+    color: var(--text3);
+    transition: transform 0.3s, color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .arch-layer.expanded .arch-layer-arrow {
+    transform: rotate(180deg);
+    color: var(--accent);
+  }
+
+  .arch-layer-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--bg3);
+  }
+
+  .arch-layer.expanded .arch-layer-body {
+    max-height: 200px;
+  }
+
+  .arch-layer-content {
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .arch-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  .arch-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: sticky;
+    top: 84px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 4px;
+  }
+
+  .stat-card-value {
+    font-family: var(--display);
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .stat-mini {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: 2px;
+  }
+
+  .stat-mini-value {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-mini-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  /* ── VERTICALS ── */
+  .verticals {
+    padding: 120px 80px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .verticals-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+  }
+
+  .vertical-card {
+    background: var(--surface);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .vertical-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .vertical-card:hover { background: var(--surface2); }
+  .vertical-card:hover::after { opacity: 1; }
+
+  .v-defense::after { background: var(--accent2); }
+  .v-health::after { background: var(--accent); }
+  .v-finance::after { background: var(--accent3); }
+  .v-science::after { background: #22d3ee; }
+  .v-legal::after { background: var(--warn); }
+  .v-infra::after { background: var(--danger); }
+  .v-gov::after { background: #a3e635; }
+
+  .vertical-icon {
+    font-family: var(--mono);
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: var(--text3);
+  }
+
+  .vertical-name {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .vertical-claim {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+
+  .vertical-proof {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+
+  /* ── MOAT ── */
+  .moat {
+    padding: 120px 80px;
+  }
+
+  .moat-layout {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .moat-left {
+    position: sticky;
+    top: 84px;
+  }
+
+  .moat-statement {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .moat-statement .hl { color: var(--accent); }
+
+  .moat-sub {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .moat-items {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .moat-item {
+    padding: 28px 32px;
+    background: var(--surface);
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .moat-item:hover {
+    background: var(--surface2);
+    border-left-color: var(--accent);
+  }
+
+  .moat-item-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  .moat-item-title {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .moat-item-body {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── VALIDATION ── */
+  .validation {
+    padding: 120px 80px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .validation-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .extension-preview {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: var(--mono);
+  }
+
+  .ext-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ext-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .ext-title {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    margin-left: 4px;
+    flex: 1;
+  }
+
+  .ext-status {
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .ext-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ext-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-radius: 3px;
+  }
+
+  .ext-row-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .ext-row-value {
+    font-size: 11px;
+    color: var(--text2);
+    flex: 1;
+  }
+
+  .ext-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 0%;
+  }
+
+  .score-val {
+    font-size: 11px;
+    color: var(--accent);
+    width: 28px;
+    text-align: right;
+  }
+
+  .ext-verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .verdict-verified { background: rgba(79,255,176,0.1); color: var(--accent); }
+  .verdict-weak { background: rgba(245,158,11,0.1); color: var(--warn); }
+  .verdict-unverified { background: rgba(255,255,255,0.05); color: var(--text3); }
+
+  .validation-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .val-point {
+    display: flex;
+    gap: 0;
+    align-items: flex-start;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .val-point:first-child { padding-top: 0; }
+  .val-point:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .val-num {
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+    width: 52px;
+    padding-top: 2px;
+    padding-right: 20px;
+    border-right: 1px solid var(--border);
+    margin-right: 24px;
+  }
+
+  .val-content { flex: 1; min-width: 0; }
+
+  .val-title {
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .val-body {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── CLOSING ── */
+  .closing {
+    padding: 160px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .closing-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(79,255,176,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .closing-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .closing-title {
+    font-family: var(--display);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--text);
+    max-width: 700px;
+    margin: 0 auto 24px;
+  }
+
+  .closing-title .hl { color: var(--accent); }
+
+  .closing-sub {
+    font-size: 17px;
+    color: var(--text2);
+    max-width: 520px;
+    margin: 0 auto 48px;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .closing-line {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 2px;
+    max-width: 620px;
+    line-height: 1.7;
+    text-align: left;
+  }
+
+  .closing-line .cmd { color: var(--accent2); }
+  .closing-line .val { color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 80px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text3);
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.6; }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 1; }
+    50% { transform: scaleY(0.5); opacity: 0.4; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── TERMINAL TICKER ── */
+  .ticker {
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 80px;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
+    width: max-content;
+  }
+
+  .ticker-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ticker-item .dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* color classes */
+  .c-accent { color: var(--accent); }
+  .c-accent2 { color: var(--accent2); }
+  .c-accent3 { color: var(--accent3); }
+  .c-warn { color: var(--warn); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">LOCAL<span>AGENT</span> STUDIO</a>
+  <ul class="nav-links">
+    <li><a href="./Autonomous_Agent_Ecosystem_Whitepaper.pdf" target="_blank" rel="noopener">Whitepaper</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="./roadmap.html">Roadmap</a></li>
+    <li><a href="./deepdive.html">Deep Dive</a></li>
+    <li><a href="https://github.com/TerminalFoundry" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+  <div class="nav-tag">v1.0 · Windows</div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker" style="margin-top:64px;">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item"><span class="dot"></span>268 IPC commands</span>
+    <span class="ticker-item"><span class="dot"></span>Zero telemetry</span>
+    <span class="ticker-item"><span class="dot"></span>6 MB installer</span>
+    <span class="ticker-item"><span class="dot"></span>567+ tests</span>
+    <span class="ticker-item"><span class="dot"></span>Schema v34 · 66 tables</span>
+    <span class="ticker-item"><span class="dot"></span>14 Rust crates</span>
+    <span class="ticker-item"><span class="dot"></span>Air-gap verified</span>
+    <span class="ticker-item"><span class="dot"></span>Local-first by design</span>
+    <span class="ticker-item"><span class="dot"></span>No cloud dependency</span>
+    <span class="ticker-item"><span class="dot"></span>SCIF deployable</span>
+    <span class="ticker-item"><span class="dot"></span>Full model custody</span>
+    <span class="ticker-item"><span class="dot"></span>Hybrid RAG pipeline</span>
+    <span class="ticker-item"><span class="dot"></span>Multi-agent orchestration</span>
+    <span class="ticker-item"><span class="dot"></span>268 IPC commands</span>
+    <span class="ticker-item"><span class="dot"></span>Zero telemetry</span>
+    <span class="ticker-item"><span class="dot"></span>6 MB installer</span>
+    <span class="ticker-item"><span class="dot"></span>567+ tests</span>
+    <span class="ticker-item"><span class="dot"></span>Schema v34 · 66 tables</span>
+    <span class="ticker-item"><span class="dot"></span>14 Rust crates</span>
+    <span class="ticker-item"><span class="dot"></span>Air-gap verified</span>
+    <span class="ticker-item"><span class="dot"></span>Local-first by design</span>
+    <span class="ticker-item"><span class="dot"></span>No cloud dependency</span>
+    <span class="ticker-item"><span class="dot"></span>SCIF deployable</span>
+    <span class="ticker-item"><span class="dot"></span>Full model custody</span>
+    <span class="ticker-item"><span class="dot"></span>Hybrid RAG pipeline</span>
+    <span class="ticker-item"><span class="dot"></span>Multi-agent orchestration</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-eyebrow">Sovereign AI Infrastructure</div>
+  <h1 class="hero-title">
+    Your data.<br>
+    Your models.<br>
+    <span class="accent">Your hardware.</span>
+  </h1>
+  <p class="hero-sub">
+    LocalAgent Studio is a local-first, multi-agent AI platform engineered from first principles for environments where data custody isn't a preference — it's a requirement.
+  </p>
+  <div class="hero-metrics">
+    <div class="metric">
+      <div class="metric-value">Zero</div>
+      <div class="metric-label">external dependencies</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value" style="color:var(--accent2);">100%</div>
+      <div class="metric-label">on-device inference</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value" style="color:var(--accent3);">21</div>
+      <div class="metric-label">specialized agents</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value" style="color:var(--warn);">6 MB</div>
+      <div class="metric-label">MSI installer</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:16px;margin-top:40px;flex-wrap:wrap;">
+    <a href="./Autonomous_Agent_Ecosystem_Whitepaper.pdf" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;padding:12px 28px;background:var(--accent);color:#080a0e;border-radius:2px;font-weight:600;">Read the Whitepaper</a>
+    <a href="https://github.com/TerminalFoundry/LocalAgent-Studio.Public" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;padding:12px 28px;border:1px solid rgba(255,255,255,0.15);color:var(--text2);border-radius:2px;">View on GitHub</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATEMENT -->
+<section class="statement">
+  <div class="statement-inner reveal">
+    <p class="statement-quote">
+      "There is no API key. No cloud endpoint.<br>No telemetry hook. No architectural pathway<br>for your data to leave your perimeter —<br><span class="hl">you can verify it in the source.</span>"
+    </p>
+    <p class="statement-body">
+      Every other AI platform draws its privacy boundary somewhere before the highest-reasoning step. They run a capable model in the cloud because that's where the intelligence lives. LocalAgent Studio breaks that assumption entirely — running large-parameter models at the coordination tier, entirely on your hardware, with absolute custody at every step of the chain.
+    </p>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="pillars" id="pillars">
+  <div class="section-header reveal">
+    <div class="section-tag">Core architecture</div>
+    <h2 class="section-title">Built from first principles.<br>No compromises made.</h2>
+  </div>
+  <div class="pillars-grid">
+    <div class="pillar reveal">
+      <div class="pillar-num">01 / 06</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="36" height="36" rx="4" stroke="rgba(79,255,176,0.3)" stroke-width="1"/>
+          <path d="M14 22h16M22 14v16" stroke="#4fffb0" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="18" y="18" width="8" height="8" rx="1" fill="rgba(79,255,176,0.15)" stroke="#4fffb0" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="pillar-title">Rust-native core</div>
+      <div class="pillar-body">14 purpose-built crates. 268 Tauri IPC commands. A thread-safe, async-first architecture with zero HTTP server bindings — all communication via typed desktop-native IPC.</div>
+      <div class="pillar-tag">Tauri v2 · Tokio · Rustlang</div>
+    </div>
+    <div class="pillar reveal reveal-delay-1">
+      <div class="pillar-num">02 / 06</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="12" r="5" stroke="#00d4ff" stroke-width="1"/>
+          <circle cx="10" cy="32" r="5" stroke="#00d4ff" stroke-width="1"/>
+          <circle cx="34" cy="32" r="5" stroke="#00d4ff" stroke-width="1"/>
+          <path d="M19 16l-6 11M25 16l6 11M15 32h14" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="pillar-title">Multi-agent orchestration</div>
+      <div class="pillar-body">petgraph DAG topology with org-chart routing. Four scoring policies. DRI resolution with intent classification. Sub-millisecond routing overhead. Delegation chains with full provenance logging.</div>
+      <div class="pillar-tag" style="color:var(--accent2); background:rgba(0,212,255,0.06); border-color:rgba(0,212,255,0.2);">petgraph · 8 traversal methods</div>
+    </div>
+    <div class="pillar reveal reveal-delay-2">
+      <div class="pillar-num">03 / 06</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="12" height="12" rx="2" stroke="#a78bfa" stroke-width="1"/>
+          <rect x="24" y="8" width="12" height="12" rx="2" stroke="#a78bfa" stroke-width="1"/>
+          <rect x="8" y="24" width="12" height="12" rx="2" stroke="#a78bfa" stroke-width="1"/>
+          <rect x="24" y="24" width="12" height="12" rx="2" fill="rgba(167,139,250,0.15)" stroke="#a78bfa" stroke-width="1"/>
+          <path d="M20 14h4M14 20v4M30 20v4M26 26h0" stroke="rgba(167,139,250,0.4)" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="pillar-title">Hybrid RAG pipeline</div>
+      <div class="pillar-body">Dense vector retrieval via ONNX embeddings (768-dim) fused with BM25 sparse search and reranking. Per-agent micro-RAG collections. Fully offline — bundled models, no downloads required.</div>
+      <div class="pillar-tag" style="color:var(--accent3); background:rgba(167,139,250,0.06); border-color:rgba(167,139,250,0.2);">nomic-embed · ONNX · FTS5</div>
+    </div>
+    <div class="pillar reveal">
+      <div class="pillar-num">04 / 06</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 6v8M22 30v8M6 22h8M30 22h8" stroke="rgba(245,158,11,0.4)" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="8" stroke="#f59e0b" stroke-width="1"/>
+          <circle cx="22" cy="22" r="3" fill="rgba(245,158,11,0.3)" stroke="#f59e0b" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="pillar-title">Local LLM inference</div>
+      <div class="pillar-body">Sandboxed llama.cpp worker via Named Pipes with Windows DACL enforcement. GPU detection, VRAM management, multi-GPU NVLink support. Large-parameter models at the coordination tier — entirely on-device.</div>
+      <div class="pillar-tag" style="color:var(--warn); background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.2);">llama.cpp · nvml · ONNX Runtime</div>
+    </div>
+    <div class="pillar reveal reveal-delay-1">
+      <div class="pillar-num">05 / 06</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="10" width="32" height="24" rx="3" stroke="#4fffb0" stroke-width="1"/>
+          <path d="M12 18h8M12 22h12M12 26h6" stroke="rgba(79,255,176,0.4)" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="32" cy="18" r="4" fill="rgba(79,255,176,0.15)" stroke="#4fffb0" stroke-width="1"/>
+          <path d="M30 18l1.5 1.5L34 16" stroke="#4fffb0" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="pillar-title">Gothi-Gethli validation</div>
+      <div class="pillar-body">Observer-analyst dual-agent architecture living inside VS Code. Real-time claim grounding with a 5-verdict taxonomy. 6-dimension implementation scoring. AI audit trail for every session.</div>
+      <div class="pillar-tag">VS Code ext · 9,700 LOC · 99 tests</div>
+    </div>
+    <div class="pillar reveal reveal-delay-2">
+      <div class="pillar-num">06 / 06</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 8l4 8h8l-6.5 5 2.5 8L22 25l-8 4 2.5-8L10 16h8z" stroke="#00d4ff" stroke-width="1" stroke-linejoin="round"/>
+          <circle cx="22" cy="22" r="4" fill="rgba(0,212,255,0.15)"/>
+        </svg>
+      </div>
+      <div class="pillar-title">pxctx memory system</div>
+      <div class="pillar-body">Three-tier RAG memory: Treasure (canonical, never expires), Working (session-scoped), Long-lived (repo-scoped). Hybrid retrieval with treasure-priority packing. Full context governance.</div>
+      <div class="pillar-tag" style="color:var(--accent2); background:rgba(0,212,255,0.06); border-color:rgba(0,212,255,0.2);">744+ chunks · 10 CLI commands</div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTODY SECTION -->
+<section class="custody" id="custody">
+  <div class="section-header reveal">
+    <div class="section-tag">Data sovereignty</div>
+    <h2 class="section-title">Not a policy.<br>An architecture.</h2>
+  </div>
+  <div class="custody-layout">
+    <div class="custody-visual reveal">
+      <div class="custody-spectrum">
+        <div style="font-family:var(--mono); font-size:10px; letter-spacing:0.12em; color:var(--text3); margin-bottom:8px; text-transform:uppercase;">Custody level</div>
+        <div class="spectrum-track">
+          <div class="spectrum-fill" id="specFill"></div>
+          <div class="spectrum-nodes">
+            <div class="spec-node" id="sn0"></div>
+            <div class="spec-node" id="sn1"></div>
+            <div class="spec-node" id="sn2"></div>
+          </div>
+        </div>
+        <div class="spec-labels">
+          <div class="spec-label">Cloud BYOK</div>
+          <div class="spec-label" style="text-align:center;">Local small model</div>
+          <div class="spec-label">Full local<br>large model</div>
+        </div>
+      </div>
+      <div class="custody-modes">
+        <div class="custody-mode" id="cm0" onclick="setCustody(0)">
+          <div class="mode-dot"></div>
+          <div class="mode-label">Cloud BYOK</div>
+          <div class="mode-badge badge-gray">API key required</div>
+        </div>
+        <div class="custody-mode" id="cm1" onclick="setCustody(1)">
+          <div class="mode-dot"></div>
+          <div class="mode-label">Local small model</div>
+          <div class="mode-badge badge-blue">No egress</div>
+        </div>
+        <div class="custody-mode active" id="cm2" onclick="setCustody(2)">
+          <div class="mode-dot"></div>
+          <div class="mode-label">Large model — C-suite tier</div>
+          <div class="mode-badge badge-green">Zero dependency</div>
+        </div>
+      </div>
+    </div>
+    <div class="custody-detail reveal reveal-delay-1" id="custodyDetail">
+      <div class="detail-tag c-accent">Full sovereignty mode</div>
+      <div class="detail-heading" id="detailHeading">Large-parameter<br>coordination.<br>Zero network surface.</div>
+      <div class="detail-body" id="detailBody">The C-suite coordination tier — the highest-reasoning agents in the system — run on large-parameter local models with absolute zero external dependency. No API key. No credential. No network call. Not even an optional one. The distinction is not policy; it is physics. A compliance officer can read the source and verify that the egress mechanism does not exist.</div>
+      <div class="detail-facts" id="detailFacts">
+        <div class="fact">
+          <svg class="fact-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#4fffb0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          SCIF-deployable by architecture
+        </div>
+        <div class="fact">
+          <svg class="fact-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#4fffb0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Model provenance fully customer-controlled
+        </div>
+        <div class="fact">
+          <svg class="fact-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#4fffb0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          GPU abstraction layer for high-parameter local inference
+        </div>
+        <div class="fact">
+          <svg class="fact-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#4fffb0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Deterministic Tier 4 fallback — functional with zero LLM dependency
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE ACCORDION -->
+<section class="architecture" id="architecture">
+  <div class="section-header reveal">
+    <div class="section-tag">System internals</div>
+    <h2 class="section-title">Every layer.<br>Accounted for.</h2>
+  </div>
+  <div class="arch-layout">
+    <div class="arch-diagram reveal">
+
+      <div class="arch-layer" id="layer0" onclick="toggleLayer(0)">
+        <div class="arch-layer-header">
+          <div class="arch-layer-dot" style="background:#4fffb0;"></div>
+          <div class="arch-layer-name">UI Layer — React 18 + Next.js</div>
+          <div class="arch-layer-sub">24 pages · 21 components · 4 themes</div>
+          <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="arch-layer-body">
+          <div class="arch-layer-content">
+            <div class="arch-chip">Chat workbench</div>
+            <div class="arch-chip">Org chart editor</div>
+            <div class="arch-chip">RAG inspector</div>
+            <div class="arch-chip">Model manager</div>
+            <div class="arch-chip">Sprint runner</div>
+            <div class="arch-chip">Pipeline editor</div>
+            <div class="arch-chip">Design tokens</div>
+            <div class="arch-chip">Hardware monitor</div>
+            <div class="arch-chip">Settings + diagnostics</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; padding:4px 0;">
+        <svg width="16" height="20" viewBox="0 0 16 20" fill="none"><path d="M8 0v16M3 12l5 5 5-5" stroke="rgba(79,255,176,0.3)" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="arch-layer" id="layer1" onclick="toggleLayer(1)">
+        <div class="arch-layer-header">
+          <div class="arch-layer-dot" style="background:#00d4ff;"></div>
+          <div class="arch-layer-name">IPC Bridge — Tauri invoke()</div>
+          <div class="arch-layer-sub">268 typed commands · no HTTP</div>
+          <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="arch-layer-body">
+          <div class="arch-layer-content">
+            <div class="arch-chip">Transport abstraction</div>
+            <div class="arch-chip">apiFetch() auto-routing</div>
+            <div class="arch-chip">Type-safe command surface</div>
+            <div class="arch-chip">Zero HTTP bindings</div>
+            <div class="arch-chip">Desktop-only enforcement</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; padding:4px 0;">
+        <svg width="16" height="20" viewBox="0 0 16 20" fill="none"><path d="M8 0v16M3 12l5 5 5-5" stroke="rgba(0,212,255,0.3)" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="arch-layer" id="layer2" onclick="toggleLayer(2)">
+        <div class="arch-layer-header">
+          <div class="arch-layer-dot" style="background:#a78bfa;"></div>
+          <div class="arch-layer-name">Rust Core — AppCore</div>
+          <div class="arch-layer-sub">14 crates · Arc&lt;AppCore&gt; · Tokio</div>
+          <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="arch-layer-body">
+          <div class="arch-layer-content">
+            <div class="arch-chip">OrgRoutingEngine</div>
+            <div class="arch-chip">DRI resolution</div>
+            <div class="arch-chip">LLM router</div>
+            <div class="arch-chip">RAG pipeline</div>
+            <div class="arch-chip">DbWriter (queue)</div>
+            <div class="arch-chip">Hardware abstraction</div>
+            <div class="arch-chip">Model manager</div>
+            <div class="arch-chip">Safe toolbelt</div>
+            <div class="arch-chip">Design token system</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; padding:4px 0;">
+        <svg width="16" height="20" viewBox="0 0 16 20" fill="none"><path d="M8 0v16M3 12l5 5 5-5" stroke="rgba(167,139,250,0.3)" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="arch-layer" id="layer3" onclick="toggleLayer(3)">
+        <div class="arch-layer-header">
+          <div class="arch-layer-dot" style="background:#f59e0b;"></div>
+          <div class="arch-layer-name">Data layer — SQLite + Vectors</div>
+          <div class="arch-layer-sub">66 tables · Schema v34 · WAL mode</div>
+          <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="arch-layer-body">
+          <div class="arch-layer-content">
+            <div class="arch-chip">Single-writer DbWriter</div>
+            <div class="arch-chip">34 migrations</div>
+            <div class="arch-chip">FTS5 full-text search</div>
+            <div class="arch-chip">Vector sidecar</div>
+            <div class="arch-chip">BM25 ranking</div>
+            <div class="arch-chip">Content-addressed blob store</div>
+            <div class="arch-chip">ACID + WAL</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; padding:4px 0;">
+        <svg width="16" height="20" viewBox="0 0 16 20" fill="none"><path d="M8 0v16M3 12l5 5 5-5" stroke="rgba(245,158,11,0.3)" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="arch-layer" id="layer4" onclick="toggleLayer(4)">
+        <div class="arch-layer-header">
+          <div class="arch-layer-dot" style="background:#ef4444;"></div>
+          <div class="arch-layer-name">Inference layer — llama.cpp worker</div>
+          <div class="arch-layer-sub">Named Pipes · DACL · sandboxed</div>
+          <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="arch-layer-body">
+          <div class="arch-layer-content">
+            <div class="arch-chip">Windows DACL enforcement</div>
+            <div class="arch-chip">hyper 1.4 over Named Pipes</div>
+            <div class="arch-chip">SSE streaming tokens</div>
+            <div class="arch-chip">GPU layer profiles</div>
+            <div class="arch-chip">LRU model cache</div>
+            <div class="arch-chip">Race-safe startup mutex</div>
+            <div class="arch-chip">Cloud fallback chain</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="arch-stats reveal reveal-delay-1">
+      <div class="stat-card">
+        <div class="stat-card-value c-accent">268</div>
+        <div class="stat-card-label">IPC commands</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-mini">
+          <div class="stat-mini-value c-accent2">567+</div>
+          <div class="stat-mini-label">Total tests</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-value c-accent3">14</div>
+          <div class="stat-mini-label">Rust crates</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-value c-warn">66</div>
+          <div class="stat-mini-label">DB tables</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-value" style="color:var(--danger);">v34</div>
+          <div class="stat-mini-label">Schema version</div>
+        </div>
+      </div>
+      <div class="stat-card" style="background:rgba(79,255,176,0.04); border-color:rgba(79,255,176,0.2);">
+        <div style="font-family:var(--mono); font-size:10px; letter-spacing:0.12em; color:var(--accent); text-transform:uppercase; margin-bottom:12px;">Graceful degradation</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; color:var(--text2);">
+            <div style="width:6px;height:6px;border-radius:50%;background:#4fffb0;"></div>Tier 1 — Full large model
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; color:var(--text2);">
+            <div style="width:6px;height:6px;border-radius:50%;background:#00d4ff;"></div>Tier 2 — Medium model
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; color:var(--text2);">
+            <div style="width:6px;height:6px;border-radius:50%;background:#a78bfa;"></div>Tier 3 — Small, on-demand
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; color:var(--text2);">
+            <div style="width:6px;height:6px;border-radius:50%;background:#f59e0b;"></div>Tier 4 — Deterministic, zero LLM
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERTICALS -->
+<section class="verticals" id="verticals">
+  <div class="section-header reveal">
+    <div class="section-tag">Target markets</div>
+    <h2 class="section-title">Built for environments<br>where the stakes are real.</h2>
+  </div>
+  <div class="verticals-grid">
+    <div class="vertical-card v-defense reveal">
+      <div class="vertical-icon">[DEF]</div>
+      <div class="vertical-name">Defense &amp; Intelligence</div>
+      <div class="vertical-claim">SCIF-deployable. No network dependency at any tier. Model provenance fully within the facility boundary. Classification-level data never touches a chip outside the perimeter.</div>
+      <div class="vertical-proof">Zero egress mechanism · DACL enforcement · air-gap verified</div>
+    </div>
+    <div class="vertical-card v-health reveal reveal-delay-1">
+      <div class="vertical-icon">[MED]</div>
+      <div class="vertical-name">Healthcare &amp; Pharma</div>
+      <div class="vertical-claim">PHI never leaves the device at any inference step — including high-reasoning coordination tasks. No BAA required by design. HIPAA custody requirements met architecturally, not contractually.</div>
+      <div class="vertical-proof">On-device inference · local RAG over patient data · zero cloud dependency</div>
+    </div>
+    <div class="vertical-card v-finance reveal reveal-delay-2">
+      <div class="vertical-icon">[FIN]</div>
+      <div class="vertical-name">Financial Services</div>
+      <div class="vertical-claim">Proprietary trading logic, M&amp;A data, and client portfolios processed entirely on-prem. Gothi event log provides SOX-ready AI audit trail. No inference vendor in the data lineage.</div>
+      <div class="vertical-proof">Claim grounding · session audit log · on-prem model custody</div>
+    </div>
+    <div class="vertical-card v-science reveal">
+      <div class="vertical-icon">[SCI]</div>
+      <div class="vertical-name">Scientific Research</div>
+      <div class="vertical-claim">Facilities like the Vera C. Rubin Observatory generate 20 TB of sky survey data per night. Multi-agent orchestration over proprietary instrument data — fully local or BYOK — means breakthrough analysis without surrendering datasets to external providers.</div>
+      <div class="vertical-proof">Local RAG over instrument data · BYOK or full air-gap · multi-agent pipeline</div>
+    </div>
+    <div class="vertical-card v-legal reveal reveal-delay-1">
+      <div class="vertical-icon">[LEG]</div>
+      <div class="vertical-name">Legal &amp; Law Firms</div>
+      <div class="vertical-claim">Privileged client communications never leave counsel's hardware at any stage of AI processing. No "sent to a model provider" disclosure in discovery. Privilege protection by architecture.</div>
+      <div class="vertical-proof">Local RAG over case files · zero transmission · verifiable custody chain</div>
+    </div>
+    <div class="vertical-card v-infra reveal reveal-delay-2">
+      <div class="vertical-icon">[ICS]</div>
+      <div class="vertical-name">Critical Infrastructure</div>
+      <div class="vertical-claim">ICS/OT environments are physically network-isolated. Full multi-agent AI orchestration is now viable on air-gapped industrial control networks — no architectural compromise required.</div>
+      <div class="vertical-proof">Offline-first · deterministic fallback · no SaaS dependency</div>
+    </div>
+    <div class="vertical-card v-gov reveal">
+      <div class="vertical-icon">[GOV]</div>
+      <div class="vertical-name">Government &amp; SLED</div>
+      <div class="vertical-claim">Sovereign data requirements met at all tiers. No FedRAMP dependency — the system never calls home. Self-hosted, self-sufficient. The Linux server build targets hardened on-prem infrastructure directly.</div>
+      <div class="vertical-proof">Self-hosted · Linux server roadmap · sovereign deployment</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALIDATION PANEL -->
+<section class="validation" id="validation">
+  <div class="section-header reveal">
+    <div class="section-tag">Gothi-Gethli validation panel</div>
+    <h2 class="section-title">AI governance<br>built in, not bolted on.</h2>
+  </div>
+  <div class="validation-layout">
+    <div class="extension-preview reveal">
+      <div class="ext-titlebar">
+        <div class="ext-dot" style="background:#ef4444;"></div>
+        <div class="ext-dot" style="background:#f59e0b;"></div>
+        <div class="ext-dot" style="background:#22c55e;"></div>
+        <div class="ext-title">GOTHI-GETHLI · session active</div>
+        <div class="ext-status" id="extStatusText">● LIVE</div>
+      </div>
+      <div class="ext-body">
+        <div class="ext-row">
+          <div class="ext-row-label">Tier</div>
+          <div class="ext-row-value" style="color:var(--accent); font-size:11px;">Tier 1 · qwen2.5:14b detected</div>
+        </div>
+        <div class="ext-row">
+          <div class="ext-row-label">Mode</div>
+          <div class="ext-row-value"><span style="font-size:10px; color:var(--accent2);">🤖</span> generative synthesis</div>
+        </div>
+        <div style="padding:10px 12px; background:var(--surface); border-radius:3px;">
+          <div style="font-family:var(--mono); font-size:9px; letter-spacing:0.1em; color:var(--text3); margin-bottom:10px; text-transform:uppercase;">Implementation score</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="ext-score">
+              <div style="font-family:var(--mono); font-size:9px; color:var(--text3); width:110px;">Plan adherence</div>
+              <div class="score-bar"><div class="score-fill" id="sf1" data-target="88"></div></div>
+              <div class="score-val" id="sv1">0</div>
+            </div>
+            <div class="ext-score">
+              <div style="font-family:var(--mono); font-size:9px; color:var(--text3); width:110px;">Claim support</div>
+              <div class="score-bar"><div class="score-fill" id="sf2" data-target="92"></div></div>
+              <div class="score-val" id="sv2">0</div>
+            </div>
+            <div class="ext-score">
+              <div style="font-family:var(--mono); font-size:9px; color:var(--text3); width:110px;">Doc coverage</div>
+              <div class="score-bar"><div class="score-fill" id="sf3" data-target="76"></div></div>
+              <div class="score-val" id="sv3">0</div>
+            </div>
+            <div class="ext-score">
+              <div style="font-family:var(--mono); font-size:9px; color:var(--text3); width:110px;">Impl. fidelity</div>
+              <div class="score-bar"><div class="score-fill" id="sf4" data-target="95"></div></div>
+              <div class="score-val" id="sv4">0</div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid var(--border);">
+            <div style="font-family:var(--mono); font-size:9px; color:var(--text3);">Composite</div>
+            <div style="font-family:var(--display); font-size:20px; font-weight:700; color:var(--accent);" id="compositeScore">—</div>
+            <div style="font-family:var(--display); font-size:14px; font-weight:700; color:var(--accent); opacity:0;" id="gradeLabel">A</div>
+          </div>
+        </div>
+        <div style="padding:10px 12px; background:var(--surface); border-radius:3px;">
+          <div style="font-family:var(--mono); font-size:9px; letter-spacing:0.1em; color:var(--text3); margin-bottom:8px; text-transform:uppercase;">Claim grounding</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--text2);">
+              <span>Auth flow refactored</span>
+              <span class="ext-verdict verdict-verified">verified</span>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--text2);">
+              <span>Tests updated for IPC</span>
+              <span class="ext-verdict verdict-verified">verified</span>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--text2);">
+              <span>Docs reflect schema v34</span>
+              <span class="ext-verdict verdict-weak">weak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="validation-right reveal reveal-delay-1">
+      <div class="val-point">
+        <div class="val-num c-accent">01</div>
+        <div class="val-content">
+          <div class="val-title">Observer + analyst, not one agent</div>
+          <div class="val-body">Gothi records — normalizing every IDE event into structured records with rule-based classification, zero LLM dependency. Gethli reasons — synthesizing session analysis, extracting claims with evidence citations, producing verdicts. Separation of concerns enforced architecturally.</div>
+        </div>
+      </div>
+      <div class="val-point">
+        <div class="val-num c-accent2">02</div>
+        <div class="val-content">
+          <div class="val-title">Claim grounding against reality</div>
+          <div class="val-body">Every synthesis claim is verified against the actual git diff — not against what the AI said it did. Five verdict taxonomy: verified, weak, unverified, contradicted, fabricated. Unclaimed security-relevant changes are flagged automatically. This is audit infrastructure, not developer feedback.</div>
+        </div>
+      </div>
+      <div class="val-point">
+        <div class="val-num c-accent3">03</div>
+        <div class="val-content">
+          <div class="val-title">Adaptive tier system</div>
+          <div class="val-body">Auto-detects available compute and selects the appropriate model tier. Tier 4 — deterministic synthesis with zero LLM dependency — means the governance layer remains fully functional even with no AI inference available. You cannot break the audit trail by losing the model.</div>
+        </div>
+      </div>
+      <div class="val-point">
+        <div class="val-num c-warn">04</div>
+        <div class="val-content">
+          <div class="val-title">Six-dimension implementation scoring</div>
+          <div class="val-body">Plan adherence, phase completion, incremental improvement, claim support, implementation fidelity, documentation coverage — scored 0–100 and graded S through F. Persisted to SQLite with 30-day retention. Every session produces a verifiable record.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="closing-glow"></div>
+  <div class="closing-tag reveal">The complete picture</div>
+  <h2 class="closing-title reveal reveal-delay-1">
+    Sovereign. Auditable.<br><span class="hl">Proven.</span>
+  </h2>
+  <p class="closing-sub reveal reveal-delay-2">
+    LocalAgent Studio is not a demo. It is a production-grade desktop platform with a 34-version schema, 567 tests, and a validation layer that produces a cryptographically-grounded audit trail of every AI decision made in development.
+  </p>
+  <div class="closing-line reveal" style="opacity:0; animation: fadeUp 0.8s 0.5s forwards;">
+    <span class="cmd">"Your data never leaves your hardware.</span>
+    <span class="val"> Your models run on your hardware.</span>
+    <span class="cmd"> The coordination intelligence runs on your hardware.</span>
+    <span class="val"> There is no API key, no cloud endpoint, no telemetry hook —</span>
+    <span class="cmd"> you can verify it in the source."</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">LOCAL<span>AGENT</span> STUDIO</div>
+  <div class="footer-meta">Sovereign AI Infrastructure · Local-first · Air-gap verified · Built on Rust</div>
+</footer>
+
+<script>
+  // ── REVEAL ON SCROLL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        if (e.target.closest('.validation') || e.target.classList.contains('extension-preview')) {
+          startScores();
+        }
+        if (e.target.closest('.custody') && e.target.classList.contains('reveal')) {
+          setTimeout(() => setCustody(2), 400);
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── CUSTODY SWITCHER ──
+  const custodyData = [
+    {
+      tag: '<span style="color:var(--accent2)">BYOK mode</span>',
+      heading: 'Credential-dependent.<br>External surface exists.',
+      body: 'BYOK routes inference through a cloud provider using a customer-supplied API key. The data stays on-device, but the model — and therefore the reasoning — lives outside the perimeter. A key is a credential. A credential is an external surface. An external surface can be audited, subpoenaed, or revoked.',
+      facts: ['Data on-device, model vendor-hosted', 'API key = auditable external credential', 'Internet connection required for inference', 'Provider rate limits and deprecation apply'],
+      factColor: 'var(--accent2)',
+      fillPct: '5%',
+      activeNodes: [0]
+    },
+    {
+      tag: '<span style="color:var(--accent)">Local inference</span>',
+      heading: 'No egress.<br>Limited parameter scale.',
+      body: 'Small local models eliminate the network dependency entirely. No API key. No credential. No internet required. The data and the model are both on-device. The constraint is parameter scale — small models handle execution-tier tasks well, but lack the reasoning depth for high-stakes coordination.',
+      facts: ['Data + model both on-device', 'Zero network dependency', 'No credential or external surface', 'Parameter scale limits complex reasoning'],
+      factColor: 'var(--accent)',
+      fillPct: '50%',
+      activeNodes: [0, 1]
+    },
+    {
+      tag: '<span style="color:var(--accent)">Full sovereignty mode</span>',
+      heading: 'Large-parameter<br>coordination.<br>Zero network surface.',
+      body: 'The C-suite coordination tier — the highest-reasoning agents in the system — run on large-parameter local models with absolute zero external dependency. No API key. No credential. No network call. Not even an optional one. The distinction is not policy; it is physics. A compliance officer can read the source and verify that the egress mechanism does not exist.',
+      facts: ['SCIF-deployable by architecture', 'Model provenance fully customer-controlled', 'GPU abstraction layer for high-parameter local inference', 'Deterministic Tier 4 fallback — functional with zero LLM dependency'],
+      factColor: 'var(--accent)',
+      fillPct: '100%',
+      activeNodes: [0, 1, 2]
+    }
+  ];
+
+  let currentCustody = 2;
+
+  function setCustody(idx) {
+    currentCustody = idx;
+    const d = custodyData[idx];
+
+    document.querySelectorAll('.custody-mode').forEach((m, i) => m.classList.toggle('active', i === idx));
+
+    const fill = document.getElementById('specFill');
+    fill.style.width = d.fillPct;
+
+    for (let i = 0; i < 3; i++) {
+      const n = document.getElementById('sn' + i);
+      n.classList.toggle('active', d.activeNodes.includes(i));
+    }
+
+    const detail = document.getElementById('custodyDetail');
+    detail.style.opacity = '0';
+    detail.style.transform = 'translateY(8px)';
+
+    setTimeout(() => {
+      document.querySelector('.detail-tag').innerHTML = d.tag;
+      document.getElementById('detailHeading').innerHTML = d.heading;
+      document.getElementById('detailBody').textContent = d.body;
+
+      const factsEl = document.getElementById('detailFacts');
+      factsEl.innerHTML = d.facts.map(f => `
+        <div class="fact">
+          <svg class="fact-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="${d.factColor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          ${f}
+        </div>
+      `).join('');
+
+      detail.style.transition = 'opacity 0.4s, transform 0.4s';
+      detail.style.opacity = '1';
+      detail.style.transform = 'none';
+    }, 200);
+  }
+
+  // init spectrum
+  setTimeout(() => {
+    document.getElementById('specFill').style.width = '100%';
+    [0,1,2].forEach(i => document.getElementById('sn'+i).classList.add('active'));
+  }, 600);
+
+  // ── ARCH ACCORDION ──
+  function toggleLayer(idx) {
+    const layer = document.getElementById('layer' + idx);
+    layer.classList.toggle('expanded');
+  }
+
+  // ── SCORE ANIMATION ──
+  let scoresStarted = false;
+
+  function startScores() {
+    if (scoresStarted) return;
+    scoresStarted = true;
+
+    const bars = [
+      { fill: 'sf1', val: 'sv1', target: 88 },
+      { fill: 'sf2', val: 'sv2', target: 92 },
+      { fill: 'sf3', val: 'sv3', target: 76 },
+      { fill: 'sf4', val: 'sv4', target: 95 },
+    ];
+
+    bars.forEach((b, i) => {
+      setTimeout(() => {
+        const fill = document.getElementById(b.fill);
+        const valEl = document.getElementById(b.val);
+        fill.style.width = b.target + '%';
+
+        let current = 0;
+        const step = b.target / 40;
+        const timer = setInterval(() => {
+          current = Math.min(current + step, b.target);
+          valEl.textContent = Math.round(current);
+          if (current >= b.target) clearInterval(timer);
+        }, 25);
+      }, i * 200);
+    });
+
+    setTimeout(() => {
+      const composite = Math.round((88 + 92 + 76 + 95) / 4);
+      const compEl = document.getElementById('compositeScore');
+      const gradeEl = document.getElementById('gradeLabel');
+      let c = 0;
+      const t = setInterval(() => {
+        c = Math.min(c + 2, composite);
+        compEl.textContent = c;
+        if (c >= composite) {
+          clearInterval(t);
+          gradeEl.style.opacity = '1';
+          gradeEl.textContent = 'A';
+        }
+      }, 30);
+    }, 1200);
+  }
+
+  // ── LIVE TICKER STATUS ──
+  const statuses = ['● LIVE', '● RECORDING', '● SCORING', '● LIVE'];
+  let si = 0;
+  setInterval(() => {
+    si = (si + 1) % statuses.length;
+    const el = document.getElementById('extStatusText');
+    if (el) el.textContent = statuses[si];
+  }, 2800);
+
+  // ── OPEN FIRST LAYER ──
+  setTimeout(() => toggleLayer(2), 800);
+</script>
+</body>
+</html>

@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>LocalAgent Studio — Agentic-OS Vision Roadmap V2.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg2: #0f0f11;
+    --bg3: #141417;
+    --border: #1e1e24;
+    --border2: #2a2a33;
+    --text: #e8e8ec;
+    --text2: #9090a0;
+    --text3: #55555f;
+    --accent: #c8f060;
+    --accent2: #7060f0;
+    --accent3: #f06060;
+    --warm: #f0c060;
+    --glow: rgba(200, 240, 96, 0.12);
+    --glow2: rgba(112, 96, 240, 0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    background: #0a0a0b !important;
+  }
+
+  body {
+    background: #0a0a0b !important;
+    background-color: #0a0a0b !important;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+
+
+  /* MAIN LAYOUT */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px 120px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 56px 0 80px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.35s;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text2);
+    line-height: 1.2;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.5s;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.65s;
+  }
+
+  .hero-meta-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    text-transform: uppercase;
+  }
+
+  .hero-meta-item strong {
+    color: var(--text2);
+    font-weight: 400;
+  }
+
+  /* PULSE DOT */
+  .pulse {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    vertical-align: middle;
+    box-shadow: 0 0 0 0 rgba(200, 240, 96, 0.4);
+    animation: pulse 2.5s ease infinite;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(200, 240, 96, 0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(200, 240, 96, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(200, 240, 96, 0); }
+  }
+
+  /* SECTION */
+  .section {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border2);
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .body-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.8;
+    max-width: 680px;
+  }
+
+  .body-text strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* THESIS BLOCK */
+  .thesis-block {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    padding: 32px 36px;
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thesis-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--glow);
+    pointer-events: none;
+  }
+
+  .thesis-block p {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* PRINCIPLES GRID */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  .principle-item {
+    background: var(--bg);
+    padding: 28px 28px 32px;
+    transition: background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .principle-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .principle-item:hover { background: var(--bg2); }
+  .principle-item:hover::after { transform: scaleX(1); }
+
+  .principle-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+
+  .principle-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .principle-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* GATES */
+  .gates-container {
+    margin-top: 48px;
+    position: relative;
+  }
+
+  .gates-line {
+    position: absolute;
+    left: 19px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+    opacity: 0.3;
+  }
+
+  .gate {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 48px;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .gate.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .gate-marker {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border2);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .gate:hover .gate-marker {
+    border-color: var(--accent);
+    background: var(--bg2);
+    box-shadow: 0 0 20px var(--glow);
+  }
+
+  .gate-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    transition: color 0.3s;
+  }
+
+  .gate:hover .gate-num { color: var(--accent); }
+
+  .gate-body {
+    flex: 1;
+    padding-top: 8px;
+  }
+
+  .gate-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .gate-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+    max-width: 560px;
+    margin-bottom: 12px;
+  }
+
+  .gate-decision {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    border-left: 2px solid var(--border2);
+    padding-left: 12px;
+    font-style: italic;
+    transition: border-color 0.3s, color 0.3s;
+  }
+
+  .gate:hover .gate-decision {
+    border-color: var(--accent);
+    color: var(--text2);
+  }
+
+  /* FLAGSHIP PROOF CALLOUT */
+  .flagship {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    padding: 40px;
+    margin-top: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flagship::before {
+    content: 'FLAGSHIP PROOF';
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--text3);
+  }
+
+  .flagship-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .flagship-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+  }
+
+  .flagship-list li {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .flagship-list li::before {
+    content: '→';
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* PHASES */
+  .phases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  .phase {
+    background: var(--bg);
+    padding: 24px;
+    transition: background 0.3s;
+    position: relative;
+  }
+
+  .phase:hover { background: var(--bg2); }
+
+  .phase-letter {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    font-style: italic;
+    color: var(--border2);
+    line-height: 1;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+
+  .phase:hover .phase-letter { color: var(--accent); }
+
+  .phase-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+
+  .phase-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.6;
+    transition: color 0.3s;
+  }
+
+  .phase:hover .phase-desc { color: var(--text2); }
+
+  /* TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 32px;
+    font-size: 13px;
+  }
+
+  .data-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text3);
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border2);
+    font-weight: 400;
+  }
+
+  .data-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+
+  .data-table tr:hover td { background: var(--bg2); color: var(--text); }
+
+  .data-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* INVARIANTS */
+  .invariants-list {
+    list-style: none;
+    margin-top: 32px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .invariant-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .invariant-item:hover {
+    border-color: var(--border2);
+    background: var(--bg3);
+  }
+
+  .invariant-icon {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .invariant-text {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .invariant-text strong {
+    color: var(--text);
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  /* RISKS */
+  .risks-list {
+    list-style: none;
+    margin-top: 32px;
+    display: grid;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .risk-item {
+    background: var(--bg);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+    transition: background 0.3s;
+  }
+
+  .risk-item:hover { background: var(--bg2); }
+
+  .risk-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent3);
+  }
+
+  .risk-desc, .risk-mit {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .risk-mit { color: var(--text); }
+
+  /* GTM */
+  .gtm-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  .gtm-stage {
+    background: var(--bg);
+    padding: 28px 24px;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gtm-stage:hover { background: var(--bg2); }
+
+  .gtm-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .gtm-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .gtm-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .gtm-items li {
+    font-size: 11px;
+    color: var(--text3);
+    padding-left: 12px;
+    position: relative;
+    line-height: 1.5;
+    transition: color 0.2s;
+  }
+
+  .gtm-items li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--border2);
+  }
+
+  .gtm-stage:hover .gtm-items li { color: var(--text2); }
+
+  /* PARTNERS */
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  .partner {
+    background: var(--bg);
+    padding: 32px 28px;
+    transition: background 0.3s;
+  }
+
+  .partner:hover { background: var(--bg2); }
+
+  .partner-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .partner-order {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .partner-fits {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .partner-fits li {
+    font-size: 12px;
+    color: var(--text2);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .partner-fits li::before {
+    content: '↗';
+    position: absolute;
+    left: 0;
+    color: var(--accent2);
+    font-size: 10px;
+  }
+
+  /* CLOSING FRAMING */
+  .closing {
+    padding: 80px 0 0;
+    text-align: center;
+  }
+
+  .closing-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .closing-statement {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(22px, 4vw, 38px);
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.4;
+    max-width: 640px;
+    margin: 0 auto 24px;
+  }
+
+  .closing-sequence {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-top: 48px;
+  }
+
+  .seq-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    padding: 12px 20px;
+    border: 1px solid var(--border);
+    margin: -1px 0 0 -1px;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+    cursor: default;
+  }
+
+  .seq-item:hover {
+    background: var(--bg2);
+    color: var(--accent);
+    border-color: var(--border2);
+    z-index: 1;
+  }
+
+  .seq-item .seq-num {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .footer-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* VISION STATEMENT LARGE */
+  .vision-statement {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(26px, 5vw, 52px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.2;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    margin: 48px 0 24px;
+  }
+
+  .vision-statement em {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  /* COMBO PILL */
+  .combo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  .combo-item {
+    background: var(--bg);
+    padding: 24px;
+    transition: background 0.3s;
+  }
+
+  .combo-item:hover { background: var(--bg2); }
+
+  .combo-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 24px;
+    color: var(--border2);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-weight: 300;
+    transition: color 0.3s;
+  }
+
+  .combo-item:hover .combo-num { color: var(--accent); }
+
+  .combo-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .combo-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.5;
+    transition: color 0.3s;
+  }
+
+  .combo-item:hover .combo-desc { color: var(--text2); }
+
+  /* WHAT MUST NEVER BE LOST */
+  .never-lost {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+
+  .never-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text2);
+    border: 1px solid var(--border2);
+    padding: 8px 16px;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+    cursor: default;
+  }
+
+  .never-tag:hover {
+    background: var(--glow);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    main { padding: 40px 20px 80px; }
+    .hero { padding: 40px 0 64px; }
+    .section { padding: 56px 0; }
+    .hero-meta { gap: 16px; }
+    .flagship-list { grid-template-columns: 1fr; }
+    .risk-item { grid-template-columns: 1fr; gap: 6px; }
+    .risk-name { font-size: 11px; }
+    .gtm-grid { grid-template-columns: repeat(2, 1fr); }
+    .partners-grid { grid-template-columns: 1fr; }
+    .combo-grid { grid-template-columns: 1fr; }
+    .phases-grid { grid-template-columns: repeat(2, 1fr); }
+    .principles-grid { grid-template-columns: 1fr; }
+    .gate { gap: 20px; }
+    .gate-marker { width: 32px; height: 32px; }
+    .flagship { padding: 28px 24px; }
+    .thesis-block { padding: 24px; }
+    .closing-sequence { flex-direction: column; align-items: center; }
+    .seq-item { width: 100%; text-align: center; margin: 0 0 -1px 0; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
+    .section-title { font-size: clamp(22px, 6vw, 36px); }
+    .never-lost { gap: 6px; }
+    .never-tag { font-size: 10px; padding: 6px 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .gtm-grid { grid-template-columns: 1fr; }
+    .phases-grid { grid-template-columns: 1fr; }
+    .hero-meta { flex-direction: column; gap: 10px; }
+    .gates-line { display: none; }
+  }
+</style>
+</head>
+<body>
+<div style="min-height:100vh;background:#0a0a0b;color:#e8e8ec;">
+
+<a href="./index.html" style="font-family: monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text2); text-decoration: none; display: block; padding: 24px 40px 0;">← LocalAgent Studio</a>
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="pulse"></span>
+      LocalAgent Studio — Strategic Vision Roadmap
+    </div>
+    <h1>Not an AI app.<br><em>An operating environment</em><br>for autonomous work.</h1>
+    <p class="hero-sub">Persistent. Governed. Sovereign.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">Version <strong>2.1</strong></div>
+      <div class="hero-meta-item">Format <strong>Board-Grade</strong></div>
+      <div class="hero-meta-item">Status <strong>Working Draft</strong></div>
+      <div class="hero-meta-item">Gates <strong>6</strong></div>
+      <div class="hero-meta-item">Phases <strong>A → G</strong></div>
+    </div>
+  </section>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <section class="section" data-observe>
+    <div class="section-label">01 — Executive Summary</div>
+    <div class="thesis-block">
+      <p>LAS is not best understood as an AI application. It is evolving toward a persistent, governable, sovereign action platform — and ultimately a Linux-based automation operating environment.</p>
+    </div>
+    <p class="body-text">
+      The immediate objective is not to build the final OS. The immediate objective is to produce <strong>undeniable proof of persistent action</strong> with a trustworthy evidence chain. Each gate that follows must be earned, not assumed.
+    </p>
+  </section>
+
+  <!-- STRATEGIC THESIS -->
+  <section class="section" data-observe>
+    <div class="section-label">02 — Strategic Thesis</div>
+    <h2 class="section-title">The market is building in the wrong layer.<br><em>The opportunity is deeper.</em></h2>
+    <p class="body-text">Current AI focus is concentrated on generation, copilots, app-level intelligence, and post hoc observability. None of that is the platform. The deeper opportunity combines six properties that the market hasn't yet assembled into a single coherent system.</p>
+    <div class="combo-grid">
+      <div class="combo-item">
+        <div class="combo-num">01</div>
+        <div class="combo-name">Persistent Execution</div>
+        <div class="combo-desc">The system operates continuously, not just when prompted.</div>
+      </div>
+      <div class="combo-item">
+        <div class="combo-num">02</div>
+        <div class="combo-name">Cross-Surface Action</div>
+        <div class="combo-desc">CLI, browser, GUI, HID, APIs — a unified action substrate.</div>
+      </div>
+      <div class="combo-item">
+        <div class="combo-num">03</div>
+        <div class="combo-name">Governance & Rollback</div>
+        <div class="combo-desc">Autonomy bounded by approval, policy, and reversibility.</div>
+      </div>
+      <div class="combo-item">
+        <div class="combo-num">04</div>
+        <div class="combo-name">Evidence & Auditability</div>
+        <div class="combo-desc">Every serious action carries a provenance chain.</div>
+      </div>
+      <div class="combo-item">
+        <div class="combo-num">05</div>
+        <div class="combo-name">Sovereignty & Privacy</div>
+        <div class="combo-desc">Core utility that never depends on cloud access.</div>
+      </div>
+      <div class="combo-item">
+        <div class="combo-num">06</div>
+        <div class="combo-name">Improvement Over Time</div>
+        <div class="combo-desc">A system that compounds capability under human governance.</div>
+      </div>
+    </div>
+    <div class="thesis-block" style="margin-top: 0;">
+      <p>That combination creates a system that is not just helpful — it is <em>operationally transformative</em>.</p>
+    </div>
+  </section>
+
+  <!-- DESIGN PRINCIPLES -->
+  <section class="section" data-observe>
+    <div class="section-label">03 — Non-Negotiable Design Principles</div>
+    <h2 class="section-title">What the platform <em>must never compromise.</em></h2>
+    <div class="principles-grid">
+      <div class="principle-item">
+        <div class="principle-num">5.1</div>
+        <div class="principle-name">Sovereignty</div>
+        <div class="principle-desc">Core utility must not depend on cloud access.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">5.2</div>
+        <div class="principle-name">Auditability</div>
+        <div class="principle-desc">Every serious action pathway must support evidence, provenance, or replay.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">5.3</div>
+        <div class="principle-name">Governance</div>
+        <div class="principle-desc">Autonomy must remain bounded by approval, rollback, or policy.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">5.4</div>
+        <div class="principle-name">Full-Stack Coherence</div>
+        <div class="principle-desc">Runtime, UX, action, memory, deployment, and security designed as one system.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">5.5</div>
+        <div class="principle-name">Graceful Degradation</div>
+        <div class="principle-desc">Failures reduce capability. They do not destroy coherence.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">5.6</div>
+        <div class="principle-name">UX & Beauty</div>
+        <div class="principle-desc">The system must remain legible, emotionally compelling, and trustworthy.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">5.7</div>
+        <div class="principle-name">Evidence-Based Claims</div>
+        <div class="principle-desc">Claims scale with proof quality. No overclaiming.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">5.8</div>
+        <div class="principle-name">Open-Ended Control</div>
+        <div class="principle-desc">Many use cases supported. Zero chaos permitted.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRATEGIC GATES -->
+  <section class="section" data-observe>
+    <div class="section-label">04 — Strategic Gates</div>
+    <h2 class="section-title">Six thresholds.<br><em>Each earned, not assumed.</em></h2>
+    <p class="body-text" style="margin-bottom: 0;">Every gate is a decision threshold. Advancement requires real evidence. Enthusiasm is not evidence.</p>
+
+    <!-- FLAGSHIP CALLOUT -->
+    <div class="flagship">
+      <div class="flagship-title">Chosen First Flagship: Persistent build / test / improve workflows running asynchronously in a managed VM, supervised through Slack, surfaced on a self-updating private dashboard.</div>
+      <ul class="flagship-list">
+        <li>Persistence — system operates while founder is absent</li>
+        <li>Governance — remote supervision, redirect, pause</li>
+        <li>Evidence — logs, scores, dashboards, artifacts</li>
+        <li>Compounding value — improves the platform that runs it</li>
+        <li>Platform legibility — reads as infrastructure, not entertainment</li>
+        <li>OS continuity — direct bridge to appliance and OS-level</li>
+      </ul>
+    </div>
+
+    <div class="gates-container">
+      <div class="gates-line"></div>
+
+      <div class="gate" data-gate>
+        <div class="gate-marker"><span class="gate-num">G1</span></div>
+        <div class="gate-body">
+          <div class="gate-title">Persistent Action Proof</div>
+          <div class="gate-desc">Prove that LAS can operate continuously and meaningfully in live workflows. Task continuity, supervised delegation, remote monitoring, useful outputs while the operator is absent.</div>
+          <div class="gate-decision">Advance only if the system can be shown as a persistent governed actor — not just an AI demo.</div>
+        </div>
+      </div>
+
+      <div class="gate" data-gate>
+        <div class="gate-marker"><span class="gate-num">G2</span></div>
+        <div class="gate-body">
+          <div class="gate-title">Evidence System Maturation</div>
+          <div class="gate-desc">Convert demonstrations into inspectable, rigorous proof. Run logs, score histories, flag outcome tracking, intervention records, version-linked change logs, annotated visual artifacts.</div>
+          <div class="gate-decision">Advance only if a skeptical observer can inspect the evidence and understand what is true.</div>
+        </div>
+      </div>
+
+      <div class="gate" data-gate>
+        <div class="gate-marker"><span class="gate-num">G3</span></div>
+        <div class="gate-body">
+          <div class="gate-title">Formalized Governed Improvement Loop</div>
+          <div class="gate-desc">This gate is not about inventing a new loop. The human version is already in daily operation. Gate 3 formalizes and automates it — increasing automation confidence and removing the human bottleneck where appropriate. The hard problem is encoding the implicit judgment the operator already applies: which failures matter, what counts as regression versus noise, when to approve versus pause.</div>
+          <div class="gate-decision">Advance only if improvements are attributable, governed, and measurable.</div>
+        </div>
+      </div>
+
+      <div class="gate" data-gate>
+        <div class="gate-marker"><span class="gate-num">G4</span></div>
+        <div class="gate-body">
+          <div class="gate-title">Cross-Surface Action Expansion</div>
+          <div class="gate-desc">Extend action capability beyond developer-centric workflows. CLI → browser → messaging → GUI → HID → specialized domain tools. The action substrate must generalize.</div>
+          <div class="gate-decision">Advance only if the action substrate generalizes beyond one narrow environment.</div>
+        </div>
+      </div>
+
+      <div class="gate" data-gate>
+        <div class="gate-marker"><span class="gate-num">G5</span></div>
+        <div class="gate-body">
+          <div class="gate-title">VM / Sovereign Appliance Productization</div>
+          <div class="gate-desc">Package LAS as a deployable persistent environment. Hardened VM image, secrets injection, remote supervision channel, snapshotting, rollback, exportable audit logs. This changes LAS from software that runs somewhere into an environment that can be deployed with confidence.</div>
+          <div class="gate-decision">Advance only if deployment becomes product-like rather than custom-setup dependent.</div>
+        </div>
+      </div>
+
+      <div class="gate" data-gate>
+        <div class="gate-marker"><span class="gate-num">G6</span></div>
+        <div class="gate-body">
+          <div class="gate-title">Linux Automation Distribution / Agentic-OS</div>
+          <div class="gate-desc">Make LAS the native control plane of a Linux-based automation environment. Agent persistence as a system concern. Native secrets and policy handling. Recovery and rollback at system-service level. A UX shell designed for autonomous work. This is not "replace Linux." This is "shape Linux around LAS as the native automation substrate."</div>
+          <div class="gate-decision">Advance only if OS integration creates real systemic advantages — not just packaging novelty.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP PHASES -->
+  <section class="section" data-observe>
+    <div class="section-label">05 — Roadmap by Phase</div>
+    <h2 class="section-title">Seven phases.<br><em>Each with a single output.</em></h2>
+    <div class="phases-grid">
+      <div class="phase">
+        <div class="phase-letter">A</div>
+        <div class="phase-name">Current Consolidation</div>
+        <div class="phase-desc">Schema evolution, documentation rigor, security hygiene, audit spine integrity. A stable system for serious proof work.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-letter">B</div>
+        <div class="phase-name">Persistent Action Flagship</div>
+        <div class="phase-desc">Generate the first undeniable signal. Shareable artifact that shifts perception from "interesting software" to "persistent action platform."</div>
+      </div>
+      <div class="phase">
+        <div class="phase-letter">C</div>
+        <div class="phase-name">Evidence Conversion</div>
+        <div class="phase-desc">Turn demo signal into investor/partner-grade proof. Case-study deck, score archive, evidence appendix, annotated recordings.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-letter">D</div>
+        <div class="phase-name">Formalized Improvement Layer</div>
+        <div class="phase-desc">Shift the already-proven human-supervised loop into more explicit system-managed form. A genuine improvement ladder across repeated runs.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-letter">E</div>
+        <div class="phase-name">Portable Action Infrastructure</div>
+        <div class="phase-desc">Generalize beyond one tool stack. A platform that operates across multiple surfaces and environments.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-letter">F</div>
+        <div class="phase-name">Deployable Sovereign Environment</div>
+        <div class="phase-desc">VM/appliance form factor and deployment discipline. Something customers and partners can actually ship.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-letter">G</div>
+        <div class="phase-name">Automation OS</div>
+        <div class="phase-desc">A Linux-based native operating environment for persistent autonomous work. Agentic-OS.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURAL INVARIANTS -->
+  <section class="section" data-observe>
+    <div class="section-label">06 — Architectural Invariants</div>
+    <h2 class="section-title">What must be right<br><em>from day one.</em></h2>
+    <p class="body-text">Early proof-phase implementation choices can inadvertently constrain later OS-level ambitions. These foundations must be treated as non-negotiable from the start — before Gate 6 is even relevant. Early proof systems should be built as if they are prototypes of a future operating substrate, not throwaway demos.</p>
+    <ul class="invariants-list">
+      <li class="invariant-item">
+        <span class="invariant-icon">INV</span>
+        <span class="invariant-text"><strong>Persistent State Model</strong>Must remain durable and legible across the full OS trajectory.</span>
+      </li>
+      <li class="invariant-item">
+        <span class="invariant-icon">INV</span>
+        <span class="invariant-text"><strong>Event / Audit Schema</strong>Must be extensible upward into system-service and OS-level contexts.</span>
+      </li>
+      <li class="invariant-item">
+        <span class="invariant-icon">INV</span>
+        <span class="invariant-text"><strong>Secrets Boundaries</strong>Must be architectural, not cosmetic. Not a layer added later.</span>
+      </li>
+      <li class="invariant-item">
+        <span class="invariant-icon">INV</span>
+        <span class="invariant-text"><strong>Action Abstraction</strong>Must not hardcode the platform into one narrow interface class.</span>
+      </li>
+      <li class="invariant-item">
+        <span class="invariant-icon">INV</span>
+        <span class="invariant-text"><strong>Governance Hooks</strong>Must remain available at every major action layer.</span>
+      </li>
+      <li class="invariant-item">
+        <span class="invariant-icon">INV</span>
+        <span class="invariant-text"><strong>Service Boundaries</strong>Must be separable enough to later map into daemon/service architecture.</span>
+      </li>
+      <li class="invariant-item">
+        <span class="invariant-icon">INV</span>
+        <span class="invariant-text"><strong>Deployment Assumptions</strong>Must not assume a permanently app-only world.</span>
+      </li>
+    </ul>
+    <div class="thesis-block" style="margin-top: 32px;">
+      <p>When a proof-phase shortcut saves time but creates architectural lock-in against OS-native evolution — default toward continuity, unless it meaningfully threatens the immediate flagship proof.</p>
+    </div>
+  </section>
+
+  <!-- RISKS -->
+  <section class="section" data-observe>
+    <div class="section-label">07 — Risks</div>
+    <h2 class="section-title">Named clearly.<br><em>Mitigated deliberately.</em></h2>
+    <ul class="risks-list">
+      <li class="risk-item">
+        <span class="risk-name">Proof Dilution</span>
+        <span class="risk-desc">Too many branches competing for attention simultaneously.</span>
+        <span class="risk-mit">Prioritize flagship proof. One undeniable signal before expansion.</span>
+      </li>
+      <li class="risk-item">
+        <span class="risk-name">Premature OS Ambition</span>
+        <span class="risk-desc">Systems-layer work slows evidence milestones.</span>
+        <span class="risk-mit">Gate OS work behind action proof. Invariants held early, full build deferred.</span>
+      </li>
+      <li class="risk-item">
+        <span class="risk-name">Hype Trap</span>
+        <span class="risk-desc">Self-improvement overclaimed before evidence exists.</span>
+        <span class="risk-mit">Show receipts before big claims. Claims scale with proof tier only.</span>
+      </li>
+      <li class="risk-item">
+        <span class="risk-name">Fragmentation</span>
+        <span class="risk-desc">Partner / platform variations fracture the core.</span>
+        <span class="risk-mit">Keep a hard invariant core. Expressions vary. Platform does not.</span>
+      </li>
+      <li class="risk-item">
+        <span class="risk-name">Security Error</span>
+        <span class="risk-desc">Secrets or privacy failure destroys trust at a critical moment.</span>
+        <span class="risk-mit">Treat secrets boundaries as first-class architecture from day one.</span>
+      </li>
+      <li class="risk-item">
+        <span class="risk-name">Solo Overload</span>
+        <span class="risk-desc">Too much surface area concentrated on one person.</span>
+        <span class="risk-mit">Bring collaborators after leverage milestone, not before proof.</span>
+      </li>
+      <li class="risk-item">
+        <span class="risk-name">UX Drift</span>
+        <span class="risk-desc">Depth outruns usability. System becomes opaque.</span>
+        <span class="risk-mit">Founder-owned UX standards explicitly maintained. Depth and accessibility in lockstep.</span>
+      </li>
+      <li class="risk-item">
+        <span class="risk-name">Trust Erosion</span>
+        <span class="risk-desc">Poor evidence or messy demos weaken credibility at key moments.</span>
+        <span class="risk-mit">Every artifact inspectable. No demo theater. Evidence-heavy always.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- GTM -->
+  <section class="section" data-observe>
+    <div class="section-label">08 — Go-to-Market Ladder</div>
+    <h2 class="section-title">Four stages.<br><em>Each unlocked by proof.</em></h2>
+    <div class="gtm-grid">
+      <div class="gtm-stage">
+        <div class="gtm-num">Stage 01</div>
+        <div class="gtm-name">Indirect Value Funnel</div>
+        <ul class="gtm-items">
+          <li>Datasets and ingestion tools</li>
+          <li>RAG artifacts</li>
+          <li>Videos and experiments</li>
+          <li>Polished public dashboards</li>
+        </ul>
+      </div>
+      <div class="gtm-stage">
+        <div class="gtm-num">Stage 02</div>
+        <div class="gtm-name">Power User Adoption</div>
+        <ul class="gtm-items">
+          <li>Advanced builders</li>
+          <li>AI tinkerers</li>
+          <li>Workflow obsessives</li>
+          <li>Privacy-first users</li>
+        </ul>
+      </div>
+      <div class="gtm-stage">
+        <div class="gtm-num">Stage 03</div>
+        <div class="gtm-name">Serious Deployments</div>
+        <ul class="gtm-items">
+          <li>Regulated environments</li>
+          <li>Secure workstations</li>
+          <li>High-sensitivity operations</li>
+          <li>Research and ops automation</li>
+        </ul>
+      </div>
+      <div class="gtm-stage">
+        <div class="gtm-num">Stage 04</div>
+        <div class="gtm-name">Platform Expressions</div>
+        <ul class="gtm-items">
+          <li>Partner-native variants</li>
+          <li>Unified core throughout</li>
+          <li>Category-defined position</li>
+          <li>Infrastructure framing</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="section" data-observe>
+    <div class="section-label">09 — Partner Architecture</div>
+    <h2 class="section-title">Sequenced by<br><em>proof maturity.</em></h2>
+    <p class="body-text">Partner outreach follows the proof form that exists — not the aspirational end-state alone. Stay provider-agnostic until scale justifies strategic agreements.</p>
+    <div class="partners-grid">
+      <div class="partner">
+        <div class="partner-name">Microsoft</div>
+        <div class="partner-order">Sequence: First</div>
+        <ul class="partner-fits">
+          <li>Most legible near-term fit</li>
+          <li>Sovereign enterprise narrative</li>
+          <li>Governance-heavy deployment</li>
+          <li>Regulated / offline environments</li>
+        </ul>
+      </div>
+      <div class="partner">
+        <div class="partner-name">NVIDIA</div>
+        <div class="partner-order">Sequence: Second</div>
+        <ul class="partner-fits">
+          <li>Accelerated agent workstation</li>
+          <li>Sovereign local compute</li>
+          <li>Hardware + runtime bundles</li>
+          <li>Appliance story made concrete</li>
+        </ul>
+      </div>
+      <div class="partner">
+        <div class="partner-name">Apple</div>
+        <div class="partner-order">Sequence: Later</div>
+        <ul class="partner-fits">
+          <li>Premium privacy-first workstation</li>
+          <li>Full-stack trust and UX</li>
+          <li>Highest product maturity bar</li>
+          <li>Most philosophically aligned</li>
+        </ul>
+      </div>
+    </div>
+    <p class="body-text" style="margin-top: 24px; font-size: 13px;">The core must remain one platform even if expressions differ. Partner sequence adapts to the proof that becomes strongest.</p>
+  </section>
+
+  <!-- WHAT MUST NEVER BE LOST -->
+  <section class="section" data-observe>
+    <div class="section-label">10 — What Must Never Be Lost</div>
+    <h2 class="section-title">The invariant<br><em>soul of the platform.</em></h2>
+    <div class="never-lost">
+      <span class="never-tag">Sovereignty</span>
+      <span class="never-tag">Auditability</span>
+      <span class="never-tag">Governance</span>
+      <span class="never-tag">Beauty</span>
+      <span class="never-tag">UX Seriousness</span>
+      <span class="never-tag">Full-Stack Coherence</span>
+      <span class="never-tag">Truthful Evidence</span>
+      <span class="never-tag">Adaptable Architecture</span>
+      <span class="never-tag">Open-Ended Capability</span>
+      <span class="never-tag">Infrastructure Ambition</span>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing section" data-observe>
+    <div class="section-label" style="justify-content: center;">Final Strategic Framing</div>
+    <p class="closing-statement">
+      A persistent, governable, sovereign action platform —<br>and later, an operating environment for autonomous work.
+    </p>
+    <p class="body-text" style="text-align: center; margin: 0 auto 48px; font-style: italic; color: var(--text3);">That framing must be earned in sequence.</p>
+    <div class="closing-sequence">
+      <div class="seq-item"><span class="seq-num">01</span>Prove action</div>
+      <div class="seq-item"><span class="seq-num">02</span>Prove evidence</div>
+      <div class="seq-item"><span class="seq-num">03</span>Formalize the proven loop</div>
+      <div class="seq-item"><span class="seq-num">04</span>Prove portability</div>
+      <div class="seq-item"><span class="seq-num">05</span>Prove deployability</div>
+      <div class="seq-item"><span class="seq-num">06</span>Prove OS-native advantage</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-brand">LocalAgent Studio</span>
+  <span class="footer-meta">V2.1 — April 9, 2026 — Working Draft</span>
+</footer>
+
+<script>
+  // Intersection Observer for scroll-triggered animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('[data-observe]').forEach(el => observer.observe(el));
+
+  // Gate animations staggered
+  const gateObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const gates = entry.target.querySelectorAll('[data-gate]');
+        gates.forEach((gate, i) => {
+          setTimeout(() => gate.classList.add('visible'), i * 120);
+        });
+        gateObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  const gatesContainer = document.querySelector('.gates-container');
+  if (gatesContainer) gateObserver.observe(gatesContainer);
+</script>
+</div>
+</body>
+</html>
