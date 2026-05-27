@@ -51,7 +51,7 @@
     z-index: 1;
     max-width: 960px;
     margin: 0 auto;
-    padding: 48px 40px 120px;
+    padding: 112px 40px 120px;
   }
 
   /* HERO */
@@ -956,12 +956,77 @@
     .hero-meta { flex-direction: column; gap: 10px; }
     .gates-line { display: none; }
   }
+
+  /* ── SITE NAV ── */
+  .site-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    background: rgba(10,10,11,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border2);
+  }
+  .site-nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .site-nav-logo span { color: var(--accent); }
+  .site-nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .site-nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text2);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .site-nav-links a:hover { color: var(--accent); }
+  .site-nav-links a.active { color: var(--accent); }
+  .site-nav-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: rgba(200,240,96,0.08);
+    border: 1px solid rgba(200,240,96,0.2);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+  @media (max-width: 640px) {
+    .site-nav { padding: 0 20px; }
+    .site-nav-links { gap: 16px; }
+    .site-nav-tag { display: none; }
+  }
 </style>
 </head>
 <body>
 <div style="min-height:100vh;background:#0a0a0b;color:#e8e8ec;">
 
-<a href="./index.html" style="font-family: monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text2); text-decoration: none; display: block; padding: 24px 40px 0;">← LocalAgent Studio</a>
+<nav class="site-nav">
+  <a href="./index.html" class="site-nav-logo"><span>LOCAL</span>AGENT STUDIO</a>
+  <ul class="site-nav-links">
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./deepdive.html">Deep Dive</a></li>
+    <li><a href="./roadmap.html" class="active">Roadmap</a></li>
+    <li><a href="./whitepaper/Autonomous%20Agent%20Ecosystem%20Whitepaper.pdf" target="_blank" rel="noopener">Whitepaper</a></li>
+    <li><a href="https://github.com/TerminalFoundry" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+  <div class="site-nav-tag">V2.1 · Draft</div>
+</nav>
 <main>
 
   <!-- HERO -->

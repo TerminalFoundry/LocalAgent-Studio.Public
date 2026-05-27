@@ -93,6 +93,7 @@
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--accent); }
+  .nav-links a.active { color: var(--accent); font-weight: 600; }
   .nav-cta {
     font-size: 0.78rem;
     font-weight: 600;
@@ -816,21 +817,18 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#">
-    <img src="LocalAgent_Studio_Logo-Rev1_2.svg" alt="LocalAgent Studio" style="height:28px;width:28px;vertical-align:middle;margin-right:0.6rem;border-radius:6px;">
-    <span style="color:var(--ink);font-family:var(--mono);font-size:0.85rem;font-weight:500;letter-spacing:0.04em;"><span style="color:var(--accent);">LAS</span> · LocalAgent Studio</span>
+  <a class="nav-logo" href="./index.html">
+    <span style="color:var(--ink);font-family:var(--mono);font-size:0.85rem;font-weight:500;letter-spacing:0.04em;"><span style="color:var(--accent);">LOCAL</span>AGENT STUDIO</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#why">Why</a></li>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#agents">Agents</a></li>
-    <li><a href="#use-cases">Use cases</a></li>
-    <li><a href="#architecture">Architecture</a></li>
-    <li><a href="#trust">Trust</a></li>
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./deepdive.html" class="active">Deep Dive</a></li>
+    <li><a href="./roadmap.html">Roadmap</a></li>
+    <li><a href="./whitepaper/Autonomous%20Agent%20Ecosystem%20Whitepaper.pdf" target="_blank" rel="noopener">Whitepaper</a></li>
+    <li><a href="https://github.com/TerminalFoundry" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
-  <a href="#architecture" class="nav-cta">Deep dive →</a>
+  <a href="./roadmap.html" class="nav-cta">Roadmap →</a>
 </nav>
-<a href="./index.html" style="font-family: monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); text-decoration: none; display: block; padding: 24px 40px 0;">← LocalAgent Studio</a>
 
 <!-- HERO -->
 <section class="hero">

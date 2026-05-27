@@ -110,6 +110,7 @@
   }
 
   .nav-links a:hover { color: var(--accent); }
+  .nav-links a.active { color: var(--accent); }
 
   .nav-tag {
     font-family: var(--mono);
@@ -1291,24 +1292,23 @@
 <nav>
   <a href="#" class="nav-logo">LOCAL<span>AGENT</span> STUDIO</a>
   <ul class="nav-links">
-    <li><a href="./Autonomous_Agent_Ecosystem_Whitepaper.pdf" target="_blank" rel="noopener">Whitepaper</a></li>
-    <li><a href="#architecture">Architecture</a></li>
-    <li><a href="./roadmap.html">Roadmap</a></li>
     <li><a href="./deepdive.html">Deep Dive</a></li>
+    <li><a href="./roadmap.html">Roadmap</a></li>
+    <li><a href="./whitepaper/Autonomous%20Agent%20Ecosystem%20Whitepaper.pdf" target="_blank" rel="noopener">Whitepaper</a></li>
     <li><a href="https://github.com/TerminalFoundry" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
-  <div class="nav-tag">v1.0 · Windows</div>
+  <div class="nav-tag">v1.0</div>
 </nav>
 
 <!-- TICKER -->
 <div class="ticker" style="margin-top:64px;">
   <div class="ticker-inner" id="ticker">
-    <span class="ticker-item"><span class="dot"></span>268 IPC commands</span>
+    <span class="ticker-item"><span class="dot"></span>Typed desktop-native IPC</span>
     <span class="ticker-item"><span class="dot"></span>Zero telemetry</span>
-    <span class="ticker-item"><span class="dot"></span>6 MB installer</span>
-    <span class="ticker-item"><span class="dot"></span>567+ tests</span>
-    <span class="ticker-item"><span class="dot"></span>Schema v34 · 66 tables</span>
-    <span class="ticker-item"><span class="dot"></span>14 Rust crates</span>
+    <span class="ticker-item"><span class="dot"></span>Compact installer</span>
+    <span class="ticker-item"><span class="dot"></span>Extensively tested</span>
+    <span class="ticker-item"><span class="dot"></span>Versioned local store</span>
+    <span class="ticker-item"><span class="dot"></span>Modular native core</span>
     <span class="ticker-item"><span class="dot"></span>Air-gap verified</span>
     <span class="ticker-item"><span class="dot"></span>Local-first by design</span>
     <span class="ticker-item"><span class="dot"></span>No cloud dependency</span>
@@ -1316,12 +1316,12 @@
     <span class="ticker-item"><span class="dot"></span>Full model custody</span>
     <span class="ticker-item"><span class="dot"></span>Hybrid RAG pipeline</span>
     <span class="ticker-item"><span class="dot"></span>Multi-agent orchestration</span>
-    <span class="ticker-item"><span class="dot"></span>268 IPC commands</span>
+    <span class="ticker-item"><span class="dot"></span>Typed desktop-native IPC</span>
     <span class="ticker-item"><span class="dot"></span>Zero telemetry</span>
-    <span class="ticker-item"><span class="dot"></span>6 MB installer</span>
-    <span class="ticker-item"><span class="dot"></span>567+ tests</span>
-    <span class="ticker-item"><span class="dot"></span>Schema v34 · 66 tables</span>
-    <span class="ticker-item"><span class="dot"></span>14 Rust crates</span>
+    <span class="ticker-item"><span class="dot"></span>Compact installer</span>
+    <span class="ticker-item"><span class="dot"></span>Extensively tested</span>
+    <span class="ticker-item"><span class="dot"></span>Versioned local store</span>
+    <span class="ticker-item"><span class="dot"></span>Modular native core</span>
     <span class="ticker-item"><span class="dot"></span>Air-gap verified</span>
     <span class="ticker-item"><span class="dot"></span>Local-first by design</span>
     <span class="ticker-item"><span class="dot"></span>No cloud dependency</span>
@@ -1360,11 +1360,11 @@
     </div>
     <div class="metric">
       <div class="metric-value" style="color:var(--warn);">6 MB</div>
-      <div class="metric-label">MSI installer</div>
+      <div class="metric-label">installer footprint</div>
     </div>
   </div>
   <div style="display:flex;gap:16px;margin-top:40px;flex-wrap:wrap;">
-    <a href="./Autonomous_Agent_Ecosystem_Whitepaper.pdf" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;padding:12px 28px;background:var(--accent);color:#080a0e;border-radius:2px;font-weight:600;">Read the Whitepaper</a>
+    <a href="./whitepaper/Autonomous%20Agent%20Ecosystem%20Whitepaper.pdf" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;padding:12px 28px;background:var(--accent);color:#080a0e;border-radius:2px;font-weight:600;">Read the Whitepaper</a>
     <a href="https://github.com/TerminalFoundry/LocalAgent-Studio.Public" target="_blank" rel="noopener" style="font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;padding:12px 28px;border:1px solid rgba(255,255,255,0.15);color:var(--text2);border-radius:2px;">View on GitHub</a>
   </div>
   <div class="hero-scroll">
@@ -1400,9 +1400,9 @@
           <rect x="18" y="18" width="8" height="8" rx="1" fill="rgba(79,255,176,0.15)" stroke="#4fffb0" stroke-width="1"/>
         </svg>
       </div>
-      <div class="pillar-title">Rust-native core</div>
-      <div class="pillar-body">14 purpose-built crates. 268 Tauri IPC commands. A thread-safe, async-first architecture with zero HTTP server bindings — all communication via typed desktop-native IPC.</div>
-      <div class="pillar-tag">Tauri v2 · Tokio · Rustlang</div>
+      <div class="pillar-title">Native core</div>
+      <div class="pillar-body">A purpose-built, modular native core with a typed in-process command surface. Thread-safe and async-first, with zero HTTP server bindings — all communication via typed desktop-native IPC.</div>
+      <div class="pillar-tag">Native desktop · async core</div>
     </div>
     <div class="pillar reveal reveal-delay-1">
       <div class="pillar-num">02 / 06</div>
@@ -1415,8 +1415,8 @@
         </svg>
       </div>
       <div class="pillar-title">Multi-agent orchestration</div>
-      <div class="pillar-body">petgraph DAG topology with org-chart routing. Four scoring policies. DRI resolution with intent classification. Sub-millisecond routing overhead. Delegation chains with full provenance logging.</div>
-      <div class="pillar-tag" style="color:var(--accent2); background:rgba(0,212,255,0.06); border-color:rgba(0,212,255,0.2);">petgraph · 8 traversal methods</div>
+      <div class="pillar-body">Graph-based DAG topology with org-chart routing. Multiple scoring policies. DRI resolution with intent classification. Sub-millisecond routing overhead. Delegation chains with full provenance logging.</div>
+      <div class="pillar-tag" style="color:var(--accent2); background:rgba(0,212,255,0.06); border-color:rgba(0,212,255,0.2);">Graph routing · multi-policy</div>
     </div>
     <div class="pillar reveal reveal-delay-2">
       <div class="pillar-num">03 / 06</div>
@@ -1430,8 +1430,8 @@
         </svg>
       </div>
       <div class="pillar-title">Hybrid RAG pipeline</div>
-      <div class="pillar-body">Dense vector retrieval via ONNX embeddings (768-dim) fused with BM25 sparse search and reranking. Per-agent micro-RAG collections. Fully offline — bundled models, no downloads required.</div>
-      <div class="pillar-tag" style="color:var(--accent3); background:rgba(167,139,250,0.06); border-color:rgba(167,139,250,0.2);">nomic-embed · ONNX · FTS5</div>
+      <div class="pillar-body">Dense vector retrieval via on-device embeddings, fused with sparse keyword search and reranking. Per-agent micro-RAG collections. Fully offline — bundled models, no downloads required.</div>
+      <div class="pillar-tag" style="color:var(--accent3); background:rgba(167,139,250,0.06); border-color:rgba(167,139,250,0.2);">Dense + sparse retrieval</div>
     </div>
     <div class="pillar reveal">
       <div class="pillar-num">04 / 06</div>
@@ -1443,8 +1443,8 @@
         </svg>
       </div>
       <div class="pillar-title">Local LLM inference</div>
-      <div class="pillar-body">Sandboxed llama.cpp worker via Named Pipes with Windows DACL enforcement. GPU detection, VRAM management, multi-GPU NVLink support. Large-parameter models at the coordination tier — entirely on-device.</div>
-      <div class="pillar-tag" style="color:var(--warn); background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.2);">llama.cpp · nvml · ONNX Runtime</div>
+      <div class="pillar-body">A sandboxed local inference worker over hardened OS-level IPC with strict access control. GPU detection, VRAM management, and multi-GPU scheduling. Large-parameter models at the coordination tier — entirely on-device.</div>
+      <div class="pillar-tag" style="color:var(--warn); background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.2);">On-device inference · GPU-aware</div>
     </div>
     <div class="pillar reveal reveal-delay-1">
       <div class="pillar-num">05 / 06</div>
@@ -1458,7 +1458,7 @@
       </div>
       <div class="pillar-title">Gothi-Gethli validation</div>
       <div class="pillar-body">Observer-analyst dual-agent architecture living inside VS Code. Real-time claim grounding with a 5-verdict taxonomy. 6-dimension implementation scoring. AI audit trail for every session.</div>
-      <div class="pillar-tag">VS Code ext · 9,700 LOC · 99 tests</div>
+      <div class="pillar-tag">Editor-embedded · dual-agent</div>
     </div>
     <div class="pillar reveal reveal-delay-2">
       <div class="pillar-num">06 / 06</div>
@@ -1470,7 +1470,7 @@
       </div>
       <div class="pillar-title">pxctx memory system</div>
       <div class="pillar-body">Three-tier RAG memory: Treasure (canonical, never expires), Working (session-scoped), Long-lived (repo-scoped). Hybrid retrieval with treasure-priority packing. Full context governance.</div>
-      <div class="pillar-tag" style="color:var(--accent2); background:rgba(0,212,255,0.06); border-color:rgba(0,212,255,0.2);">744+ chunks · 10 CLI commands</div>
+      <div class="pillar-tag" style="color:var(--accent2); background:rgba(0,212,255,0.06); border-color:rgba(0,212,255,0.2);">Tiered memory · CLI-managed</div>
     </div>
   </div>
 </section>
@@ -1555,8 +1555,8 @@
       <div class="arch-layer" id="layer0" onclick="toggleLayer(0)">
         <div class="arch-layer-header">
           <div class="arch-layer-dot" style="background:#4fffb0;"></div>
-          <div class="arch-layer-name">UI Layer — React 18 + Next.js</div>
-          <div class="arch-layer-sub">24 pages · 21 components · 4 themes</div>
+          <div class="arch-layer-name">Presentation layer — desktop UI</div>
+          <div class="arch-layer-sub">Workbenches, editors, and inspectors</div>
           <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <div class="arch-layer-body">
@@ -1581,14 +1581,14 @@
       <div class="arch-layer" id="layer1" onclick="toggleLayer(1)">
         <div class="arch-layer-header">
           <div class="arch-layer-dot" style="background:#00d4ff;"></div>
-          <div class="arch-layer-name">IPC Bridge — Tauri invoke()</div>
-          <div class="arch-layer-sub">268 typed commands · no HTTP</div>
+          <div class="arch-layer-name">Bridge layer — typed in-process IPC</div>
+          <div class="arch-layer-sub">Typed command surface · no HTTP</div>
           <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <div class="arch-layer-body">
           <div class="arch-layer-content">
             <div class="arch-chip">Transport abstraction</div>
-            <div class="arch-chip">apiFetch() auto-routing</div>
+            <div class="arch-chip">Auto-routed transport</div>
             <div class="arch-chip">Type-safe command surface</div>
             <div class="arch-chip">Zero HTTP bindings</div>
             <div class="arch-chip">Desktop-only enforcement</div>
@@ -1603,8 +1603,8 @@
       <div class="arch-layer" id="layer2" onclick="toggleLayer(2)">
         <div class="arch-layer-header">
           <div class="arch-layer-dot" style="background:#a78bfa;"></div>
-          <div class="arch-layer-name">Rust Core — AppCore</div>
-          <div class="arch-layer-sub">14 crates · Arc&lt;AppCore&gt; · Tokio</div>
+          <div class="arch-layer-name">Core engine — orchestration &amp; services</div>
+          <div class="arch-layer-sub">Modular · async · shared core</div>
           <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <div class="arch-layer-body">
@@ -1613,7 +1613,7 @@
             <div class="arch-chip">DRI resolution</div>
             <div class="arch-chip">LLM router</div>
             <div class="arch-chip">RAG pipeline</div>
-            <div class="arch-chip">DbWriter (queue)</div>
+            <div class="arch-chip">Write queue</div>
             <div class="arch-chip">Hardware abstraction</div>
             <div class="arch-chip">Model manager</div>
             <div class="arch-chip">Safe toolbelt</div>
@@ -1629,19 +1629,19 @@
       <div class="arch-layer" id="layer3" onclick="toggleLayer(3)">
         <div class="arch-layer-header">
           <div class="arch-layer-dot" style="background:#f59e0b;"></div>
-          <div class="arch-layer-name">Data layer — SQLite + Vectors</div>
-          <div class="arch-layer-sub">66 tables · Schema v34 · WAL mode</div>
+          <div class="arch-layer-name">Data layer — local store with hybrid index</div>
+          <div class="arch-layer-sub">Versioned schema · single-writer · ACID</div>
           <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <div class="arch-layer-body">
           <div class="arch-layer-content">
-            <div class="arch-chip">Single-writer DbWriter</div>
-            <div class="arch-chip">34 migrations</div>
-            <div class="arch-chip">FTS5 full-text search</div>
-            <div class="arch-chip">Vector sidecar</div>
-            <div class="arch-chip">BM25 ranking</div>
+            <div class="arch-chip">Single-writer pipeline</div>
+            <div class="arch-chip">Versioned migrations</div>
+            <div class="arch-chip">Full-text search</div>
+            <div class="arch-chip">Vector index</div>
+            <div class="arch-chip">Hybrid ranking</div>
             <div class="arch-chip">Content-addressed blob store</div>
-            <div class="arch-chip">ACID + WAL</div>
+            <div class="arch-chip">ACID + journaled writes</div>
           </div>
         </div>
       </div>
@@ -1653,18 +1653,18 @@
       <div class="arch-layer" id="layer4" onclick="toggleLayer(4)">
         <div class="arch-layer-header">
           <div class="arch-layer-dot" style="background:#ef4444;"></div>
-          <div class="arch-layer-name">Inference layer — llama.cpp worker</div>
-          <div class="arch-layer-sub">Named Pipes · DACL · sandboxed</div>
+          <div class="arch-layer-name">Inference layer — sandboxed local worker</div>
+          <div class="arch-layer-sub">Hardened IPC · access-controlled · sandboxed</div>
           <svg class="arch-layer-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <div class="arch-layer-body">
           <div class="arch-layer-content">
-            <div class="arch-chip">Windows DACL enforcement</div>
-            <div class="arch-chip">hyper 1.4 over Named Pipes</div>
-            <div class="arch-chip">SSE streaming tokens</div>
+            <div class="arch-chip">OS-level access control</div>
+            <div class="arch-chip">Hardened OS-level transport</div>
+            <div class="arch-chip">Streaming tokens</div>
             <div class="arch-chip">GPU layer profiles</div>
             <div class="arch-chip">LRU model cache</div>
-            <div class="arch-chip">Race-safe startup mutex</div>
+            <div class="arch-chip">Race-safe startup</div>
             <div class="arch-chip">Cloud fallback chain</div>
           </div>
         </div>
@@ -1673,28 +1673,6 @@
     </div>
 
     <div class="arch-stats reveal reveal-delay-1">
-      <div class="stat-card">
-        <div class="stat-card-value c-accent">268</div>
-        <div class="stat-card-label">IPC commands</div>
-      </div>
-      <div class="stat-grid">
-        <div class="stat-mini">
-          <div class="stat-mini-value c-accent2">567+</div>
-          <div class="stat-mini-label">Total tests</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-value c-accent3">14</div>
-          <div class="stat-mini-label">Rust crates</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-value c-warn">66</div>
-          <div class="stat-mini-label">DB tables</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-value" style="color:var(--danger);">v34</div>
-          <div class="stat-mini-label">Schema version</div>
-        </div>
-      </div>
       <div class="stat-card" style="background:rgba(79,255,176,0.04); border-color:rgba(79,255,176,0.2);">
         <div style="font-family:var(--mono); font-size:10px; letter-spacing:0.12em; color:var(--accent); text-transform:uppercase; margin-bottom:12px;">Graceful degradation</div>
         <div style="display:flex; flex-direction:column; gap:8px;">
@@ -1727,7 +1705,7 @@
       <div class="vertical-icon">[DEF]</div>
       <div class="vertical-name">Defense &amp; Intelligence</div>
       <div class="vertical-claim">SCIF-deployable. No network dependency at any tier. Model provenance fully within the facility boundary. Classification-level data never touches a chip outside the perimeter.</div>
-      <div class="vertical-proof">Zero egress mechanism · DACL enforcement · air-gap verified</div>
+      <div class="vertical-proof">Zero egress mechanism · access-controlled inference · air-gap verified</div>
     </div>
     <div class="vertical-card v-health reveal reveal-delay-1">
       <div class="vertical-icon">[MED]</div>
@@ -1786,7 +1764,7 @@
       <div class="ext-body">
         <div class="ext-row">
           <div class="ext-row-label">Tier</div>
-          <div class="ext-row-value" style="color:var(--accent); font-size:11px;">Tier 1 · qwen2.5:14b detected</div>
+          <div class="ext-row-value" style="color:var(--accent); font-size:11px;">Tier 1 · large local model detected</div>
         </div>
         <div class="ext-row">
           <div class="ext-row-label">Mode</div>
@@ -1834,7 +1812,7 @@
               <span class="ext-verdict verdict-verified">verified</span>
             </div>
             <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--text2);">
-              <span>Docs reflect schema v34</span>
+              <span>Docs reflect current schema</span>
               <span class="ext-verdict verdict-weak">weak</span>
             </div>
           </div>
@@ -1868,7 +1846,7 @@
         <div class="val-num c-warn">04</div>
         <div class="val-content">
           <div class="val-title">Six-dimension implementation scoring</div>
-          <div class="val-body">Plan adherence, phase completion, incremental improvement, claim support, implementation fidelity, documentation coverage — scored 0–100 and graded S through F. Persisted to SQLite with 30-day retention. Every session produces a verifiable record.</div>
+          <div class="val-body">Plan adherence, phase completion, incremental improvement, claim support, implementation fidelity, documentation coverage — scored 0–100 and graded S through F. Persisted locally with 30-day retention. Every session produces a verifiable record.</div>
         </div>
       </div>
     </div>
